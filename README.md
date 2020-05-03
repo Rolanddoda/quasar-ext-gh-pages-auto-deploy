@@ -18,13 +18,13 @@ everything would be a great idea.
 
 ## Install
 ```bash
-quasar ext add quasar-app-extension-gh-pages-auto-deploy
+quasar ext add gh-pages-auto-deploy
 ```
 Quasar CLI will retrieve it from NPM and install the extension.
 
 ## Uninstall
 ```bash
-quasar ext remove quasar-app-extension-gh-pages-auto-deploy
+quasar ext remove gh-pages-auto-deploy
 ```
 
 ### The story - me and Quasar
