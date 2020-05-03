@@ -22,7 +22,7 @@ async function addPublicPathToConfig(api) {
     const {EOL} = require('os')
     const fileLines = fs.readFileSync(configPath, 'utf-8').split(/\r?\n/g)
     const returnTextIndex = fileLines.findIndex(line => line.includes('return'))
-    const newLine = `publicPath: process.env.NODE_ENV === "production" ? "/${repoName}/" : "/",`
+    const newLine = `\t\tpublicPath: process.env.NODE_ENV === "production" ? "/${repoName}/" : "/",`
     fileLines.splice(returnTextIndex + 1, 0, newLine)
     fs.writeFileSync(configPath, fileLines.join(EOL), {encoding: 'utf-8'})
   }

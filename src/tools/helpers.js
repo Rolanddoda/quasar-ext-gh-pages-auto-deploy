@@ -26,13 +26,11 @@ async function getRepoName() {
 
 function getCleanInstallCommand(api) {
   const npmOrYarn = getPackageManager(api)
-  if (npmOrYarn === 'npm') return 'npm ci'
-  else return 'yarn install --frozen-lockfile'
+  return npmOrYarn === 'npm' ? 'npm ci' : 'yarn install --frozen-lockfile'
 }
 
 module.exports = {
   getUserCredentials,
-  getPackageManager,
   getRepoName,
   getCleanInstallCommand
 }
