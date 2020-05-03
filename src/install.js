@@ -1,4 +1,16 @@
-module.exports = function (api) {
+const fs = require('fs')
+const execa = require("execa")
+
+async function getUserCredentials() {
+  const {stdout: userName} = await execa.command('git config user.name')
+  const {stdout: email} = await execa.command('git config user.email')
+  return {
+    username: userName.replace(' ', ''),
+    email
+  }
+}
+
+module.exports = async function (api) {
   api.compatibleWith('quasar', '>=1.0.0')
   api.compatibleWith('@quasar/app', '>=1.0.0')
   
@@ -13,5 +25,6 @@ module.exports = function (api) {
     }
   })
   
-  api.render('./templates')
+  const {username, email} = await getUserCredentials()
+  api.render('./templates', {username, email})
 }
