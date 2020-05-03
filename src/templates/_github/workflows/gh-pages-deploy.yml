@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Clean install dependencies
-        run: npm ci
+        run: <%= cleanInstallCommand %>
 
       - name: Run deploy script
         run: |

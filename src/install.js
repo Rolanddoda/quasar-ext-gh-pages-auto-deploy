@@ -10,6 +10,21 @@ async function getUserCredentials() {
   }
 }
 
+function getPackageManager (api) {
+  if (fs.existsSync(api.resolve.app('package-lock.json'))) {
+    return 'npm'
+  } else if (fs.existsSync(api.resolve.app('yarn.lock'))) {
+    return 'yarn'
+  }
+  
+}
+
+function getCleanInstallCommand (api) {
+  const  npmOrYarn = getPackageManager(api)
+  if (npmOrYarn === 'npm') return 'npm ci'
+  else return 'yarn install --frozen-lockfile'
+}
+
 module.exports = async function (api) {
   api.compatibleWith('quasar', '>=1.0.0')
   api.compatibleWith('@quasar/app', '>=1.0.0')
@@ -24,7 +39,7 @@ module.exports = async function (api) {
       "node-emoji": "^1.10.0"
     }
   })
-  
+  const cleanInstallCommand = getCleanInstallCommand(api)
   const {username, email} = await getUserCredentials()
-  api.render('./templates', {username, email})
+  api.render('./templates', {username, email, cleanInstallCommand})
 }
