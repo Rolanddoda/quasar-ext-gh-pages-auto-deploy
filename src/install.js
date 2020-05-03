@@ -10,17 +10,22 @@ async function getUserCredentials() {
   }
 }
 
-function getPackageManager (api) {
+function getPackageManager(api) {
   if (fs.existsSync(api.resolve.app('package-lock.json'))) {
     return 'npm'
   } else if (fs.existsSync(api.resolve.app('yarn.lock'))) {
     return 'yarn'
   }
-  
 }
 
-function getCleanInstallCommand (api) {
-  const  npmOrYarn = getPackageManager(api)
+async function getRepoName() {
+  const {stdout: repoUrl} = await execa.command('git config --get remote.origin.url')
+  const {stdout: repoName} = await execa.command(`basename -s .git ${repoUrl}`)
+  return repoName
+}
+
+function getCleanInstallCommand(api) {
+  const npmOrYarn = getPackageManager(api)
   if (npmOrYarn === 'npm') return 'npm ci'
   else return 'yarn install --frozen-lockfile'
 }
@@ -28,7 +33,7 @@ function getCleanInstallCommand (api) {
 module.exports = async function (api) {
   api.compatibleWith('quasar', '>=1.0.0')
   api.compatibleWith('@quasar/app', '>=1.0.0')
-  
+
   api.extendPackageJson({
     scripts: {
       "gh-pages-deploy": "node scripts/gh-pages-deploy.js"
@@ -39,6 +44,17 @@ module.exports = async function (api) {
       "node-emoji": "^1.10.0"
     }
   })
+  const configPath = api.resolve.app('./quasar.conf.js')
+  const config = require(configPath)
+  if (!config.publicPath) {
+    const repoName = await getRepoName()
+    const {EOL} = require('os')
+    const fileLines = fs.readFileSync(configPath, 'utf-8').split(/\r?\n/g)
+    const newLine = `publicPath: process.env.NODE_ENV === "production" ? "/${repoName}/" : "/",`
+    fileLines.splice(1, 0, newLine)
+    fs.writeFileSync(configPath, fileLines.join(EOL), {encoding: 'utf-8'})
+  }
+
   const cleanInstallCommand = getCleanInstallCommand(api)
   const {username, email} = await getUserCredentials()
   api.render('./templates', {username, email, cleanInstallCommand})
