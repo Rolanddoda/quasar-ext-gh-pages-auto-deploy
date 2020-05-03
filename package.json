@@ -1,6 +1,6 @@
 {
   "name": "quasar-app-extension-gh-pages-auto-deploy",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Automate deployment to github pages",
   "author": "Roland Doda <rolanddoda2014@gmail.com>",
   "license": "MIT",
