@@ -1,7 +1,6 @@
 const execa = require("execa");
 const emoji = require("node-emoji");
 const chalk = require("chalk");
-const fs = require("fs");
 
 const firstLog = emoji.get("fast_forward") + " " + chalk.yellow("Building...");
 const secondLog = emoji.get("fast_forward") + " " + chalk.yellow("Pushing...");
@@ -16,12 +15,12 @@ const thirdLog =
   try {
     await execa.command('git checkout --orphan gh-pages')
     console.log(firstLog);
-    await execa.command('npm run build')
-    await execa.command('git --work-tree dist add --all')
-    await execa.command('git --work-tree dist commit -m "gh-pages"')
+    await execa.command('quasar build')
+    await execa.command('git --work-tree dist/spa add --all')
+    await execa.command('git --work-tree dist/spa commit -m "gh-pages"')
     console.log(secondLog);
     await execa.command('git push origin HEAD:gh-pages --force')
-    await execa.command('rm -r dist')
+    await execa.command('rm -r dist/spa')
     await execa.command('git checkout -f master')
     await execa.command('git branch -D gh-pages')
     console.log(thirdLog);
