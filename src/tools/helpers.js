@@ -19,9 +19,13 @@ function getPackageManager(api) {
 }
 
 async function getRepoName() {
-  const {stdout: repoUrl} = await execa.command('git config --get remote.origin.url')
-  const {stdout: repoName} = await execa.command(`basename -s .git ${repoUrl}`)
-  return repoName
+  try {
+    const {stdout: repoUrl} = await execa.command('git config --get remote.origin.url')
+    const {stdout: repoName} = await execa.command(`basename -s .git ${repoUrl}`)
+    return repoName
+  }  catch (e) {
+    throw new Error('You must add a remote before installing this plugin. Adding a remote: https://help.github.com/en/github/using-git/adding-a-remote')
+  }
 }
 
 function getCleanInstallCommand(api) {
