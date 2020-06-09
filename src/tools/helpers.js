@@ -1,5 +1,6 @@
 const fs = require('fs')
 const execa = require("execa")
+const path = require("path")
 
 async function getUserCredentials() {
   const {stdout: userName} = await execa.command('git config user.name')
@@ -21,8 +22,7 @@ function getPackageManager(api) {
 async function getRepoName() {
   try {
     const {stdout: repoUrl} = await execa.command('git config --get remote.origin.url')
-    const {stdout: repoName} = await execa.command(`basename -s .git ${repoUrl}`)
-    return repoName
+    return path.basename(repoUrl).replace('.git', '')
   }  catch (e) {
     throw new Error('You must add a remote before installing this plugin. Adding a remote: https://help.github.com/en/github/using-git/adding-a-remote')
   }
