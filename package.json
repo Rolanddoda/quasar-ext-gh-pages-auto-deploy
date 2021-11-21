@@ -5,6 +5,9 @@
   "author": "Roland Doda <rolanddoda2014@gmail.com>",
   "license": "MIT",
   "main": "src/index.js",
+  "scripts": {
+    "release": "np --no-tests --no-yarn"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/Rolanddoda/quasar-ext-gh-pages-auto-deploy.git"
